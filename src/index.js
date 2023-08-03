@@ -1,8 +1,15 @@
 import { fetchBreeds, fetchCatByBreed } from './cat-api';
 // import SlimSelect from 'slim-select';
+import './common.css';
 const breedsSelect = document.querySelector('.breed-select');
 const catsList = document.querySelector('.cat-info');
-// breedsSelect.addEventListener('click', popl);
+const loader = document.querySelector('.loader');
+const error = document.querySelector('.error');
+breedsSelect.addEventListener('change', listBreedsCats);
+
+loader.classList.replace('loader', 'is-hidden');
+error.classList.add('is-hidden');
+catsList.classList.add('is-hidden');
 
 function openValue(data) {
   return data
@@ -18,30 +25,18 @@ fetchBreeds()
   })
   .catch(console.warn);
 
-function informCats(data) {
-  const catsId = data.id;
-  const catsName = data.name;
-  const catsDesp = data.description;
-  const catsTemp = data.temperament;
-  if (catsId === data.id) {
-    const cats = `
-      <ul>
-        <li>
-          <h2>${catsName}</h2>
-          <img src="" alt="cats" />
+function listBreedsCats(e) {
+  loader.classList.replace('is-hidden', 'loader');
+  breedsSelect.classList.add('is-hidden');
+  catsList.classList.add('is-hidden');
+  const breedId = e.currentTarget.value;
 
-          <p>${catsDesp}</p>
-          <p>${catsTemp}</p>
-        </li>
-      </ul>
-`;
-  }
+  fetchCatByBreed(breedId)
+    .then(data => {
+      loader.classList.replace('loader', 'is-hidden');
+      breedsSelect.classList.remove('is-hidden');
+      const { url, breeds } = data[0];
+      catsList.innerHTML = `<div class="box-img"><img src="${url}" alt="${breeds[0].name}" width="400"/></div><div class="box"><h1>${breeds[0].name}</h1><p>${breeds[0].description}</p><p><b>Temperament:</b> ${breeds[0].temperament}</p></div>`;
+    })
+    .catch(console.warn);
 }
-
-fetchCatByBreed(breedId)
-  .then(response => {
-    const breedsas = response.breedId;
-    console.log(breedsas);
-    catsList.innerHTML = informCats(breedId);
-  })
-  .catch(console.warn);

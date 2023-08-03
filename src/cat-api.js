@@ -1,5 +1,6 @@
 import axios from 'axios';
-const BASE_URL = ' https://api.thecatapi.com/v1/images/search';
+const BASE_URL = ' https://api.thecatapi.com/v1';
+
 axios.defaults.headers.common['x-api-key'] =
   'live_oc825gUETmLwZ9Mqt9IlkFLJnUwvXrog5FqLjUFtPASKO4ZgXjZBoOrdvx8r9SkG';
 
@@ -20,6 +21,6 @@ export function fetchBreeds() {
 
 export function fetchCatByBreed(breedId) {
   return axios.get(
-    'https://api.thecatapi.com/v1/images/search?breed_ids=${breedId}'
+    `${BASE_URL}/images/search?api_key=live_oc825gUETmLwZ9Mqt9IlkFLJnUwvXrog5FqLjUFtPASKO4ZgXjZBoOrdvx8r9SkG&breed_ids=${breedId}`
   );
 }
