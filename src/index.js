@@ -1,42 +1,52 @@
 import { fetchBreeds, fetchCatByBreed } from './cat-api';
-// import SlimSelect from 'slim-select';
-import './common.css';
-const breedsSelect = document.querySelector('.breed-select');
-const catsList = document.querySelector('.cat-info');
-const loader = document.querySelector('.loader');
-const error = document.querySelector('.error');
-breedsSelect.addEventListener('change', listBreedsCats);
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import SlimSelect from 'slim-select';
+import 'slim-select/dist/slimselect.css';
 
-loader.classList.replace('loader', 'is-hidden');
-error.classList.add('is-hidden');
-catsList.classList.add('is-hidden');
-
-function openValue(data) {
+const ref = {
+  breedSelector: document.querySelector('.breed-select'),
+  catInfo: document.querySelector('.cat-info'),
+  loader: document.querySelector('.loader'),
+  error: document.querySelector('.error'),
+};
+const { breedSelector, catInfo, loader, error } = ref;
+// loader.hidden = true;
+loader.classList.remove('is-hidden');
+breedSelector.classList.add('is-hidden');
+function listBreed(data) {
   return data
     .map(({ id, name }) => `<option value="${id}">${name}</option>`)
     .join('');
 }
-
 fetchBreeds()
-  .then(response => {
-    const breeds = response.data;
-    console.log(breeds);
-    breedsSelect.innerHTML = openValue(breeds);
+  .then(data => {
+    console.log(data);
+    breedSelector.innerHTML = listBreed(data);
+    new SlimSelect({
+      select: breedSelector,
+    });
+    breedSelector.classList.remove('is-hidden');
   })
-  .catch(console.warn);
+  .catch(() =>
+    Notify.failure('Oops! Something went wrong! Try reloading the page!')
+  )
+  .finally(() => loader.classList.add('is-hidden'));
 
-function listBreedsCats(e) {
-  loader.classList.replace('is-hidden', 'loader');
-  breedsSelect.classList.add('is-hidden');
-  catsList.classList.add('is-hidden');
-  const breedId = e.currentTarget.value;
+breedSelector.addEventListener('change', onSelectBreed);
 
+function onSelectBreed(event) {
+  catInfo.innerHTML = '';
+  loader.classList.remove('is-hidden');
+
+  const breedId = event.currentTarget.value;
   fetchCatByBreed(breedId)
     .then(data => {
-      loader.classList.replace('loader', 'is-hidden');
-      breedsSelect.classList.remove('is-hidden');
       const { url, breeds } = data[0];
-      catsList.innerHTML = `<div class="box-img"><img src="${url}" alt="${breeds[0].name}" width="400"/></div><div class="box"><h1>${breeds[0].name}</h1><p>${breeds[0].description}</p><p><b>Temperament:</b> ${breeds[0].temperament}</p></div>`;
+
+      catInfo.innerHTML = `<div class="box-img"><img src="${url}" alt="${breeds[0].name}" width="400"/></div><div class="box"><h1>${breeds[0].name}</h1><p>${breeds[0].description}</p><p><b>Temperament:</b> ${breeds[0].temperament}</p></div>`;
     })
-    .catch(console.warn);
+    .catch(error =>
+      Notify.failure('Oops! Something went wrong! Try reloading the page!')
+    )
+    .finally(() => loader.classList.add('is-hidden'));
 }

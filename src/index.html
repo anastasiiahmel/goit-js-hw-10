@@ -8,10 +8,48 @@
   </head>
   <body>
     <select class="breed-select"></select>
-    <!-- <p class="loader">Loading data, please wait...</p>
-    <p class="error">Oops! Something went wrong! Try reloading the page!</p> -->
+<p class="loader"></p>
+
     <div class="cat-info"></div>
 
     <script src="index.js" type="module"></script>
   </body>
 </html>
+
+<!-- // import { fetchBreeds, fetchCatByBreed } from './cat-api';
+// // import SlimSelect from 'slim-select';
+
+// const selector = document.querySelector('.breed-select');
+// const catInfo = document.querySelector('.cat-info');
+// const loader = document.querySelector('.loader');
+// const error = document.querySelector('.error');
+// selector.addEventListener('change', listBreedsCats);
+
+// function listBreed(data) {
+//   return data
+//     .map(({ id, name }) => `<option value="${id}">${name}</option>`)
+//     .join('');
+// }
+
+// fetchBreeds()
+//   .then(response => {
+//     const breeds = response.data;
+//     // console.log(breeds);
+//     selector.innerHTML = listBreed(breeds);
+//   })
+//   .catch(console.warn);
+
+
+selector.addEventListener('change', catDescription);
+function catDescription(e) {
+  const breedId = e.currentTarget.value;
+  fetchCatByBreed(breedId)
+    .then(data => {
+      console.log(data);
+      const { url, breeds } = data[0];
+      divCatInfo.innerHTML = `<div class="box-img"><img src="${url}" alt="${breeds[0].name}" width="400"/></div><div class="box"><h1>${breeds[0].name}</h1><p>${breeds[0].description}</p><p><b>Temperament:</b> ${breeds[0].temperament}</p></div>`;
+    })
+    .catch(error => console.log(error));
+}
+// 
+
