@@ -10,7 +10,6 @@ const ref = {
   error: document.querySelector('.error'),
 };
 const { breedSelector, catInfo, loader, error } = ref;
-// loader.hidden = true;
 loader.classList.remove('is-hidden');
 breedSelector.classList.add('is-hidden');
 function listBreed(data) {
@@ -45,7 +44,7 @@ function onSelectBreed(event) {
 
       catInfo.innerHTML = `<div class="box-img"><img src="${url}" alt="${breeds[0].name}" width="400"/></div><div class="box"><h1>${breeds[0].name}</h1><p>${breeds[0].description}</p><p><b>Temperament:</b> ${breeds[0].temperament}</p></div>`;
     })
-    .catch(error =>
+    .catch(() =>
       Notify.failure('Oops! Something went wrong! Try reloading the page!')
     )
     .finally(() => loader.classList.add('is-hidden'));

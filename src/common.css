@@ -12,11 +12,19 @@ body {
   line-height: 1.5;
 }
 
-img {
-  display: block;
+.box-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   max-width: 100%;
 }
 
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
 h1 {
   margin: 0;
 }
@@ -43,8 +51,8 @@ h1 {
 }
 
 .loader {
-  width: 48px;
-  height: 48px;
+  width: 24px;
+  height: 24px;
   display: block;
   margin: 15px auto;
   position: relative;
